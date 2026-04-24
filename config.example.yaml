@@ -1,0 +1,22 @@
+# portwatch example configuration
+# Copy to /etc/portwatch/config.yaml or pass via --config flag.
+
+# How often to scan open ports.
+interval: 30s
+
+# Directory where port snapshots are persisted between runs.
+snapshot_dir: /var/lib/portwatch
+
+ports:
+  # Protocols to scan. Supported values: tcp, udp
+  protocols:
+    - tcp
+
+  # Only monitor ports within this inclusive range.
+  range_min: 1
+  range_max: 65535
+
+alert:
+  # Where to write alerts.
+  # Use "stdout" to print to standard output, or provide an absolute file path.
+  output: stdout
