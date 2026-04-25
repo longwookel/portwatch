@@ -76,3 +76,25 @@ func TestRemaining(t *testing.T) {
 		t.Fatalf("expected 3 remaining, got %d", r)
 	}
 }
+
+func TestAllowPartialRefill(t *testing.T) {
+	l := New(2, 4) // 2 tokens/sec, burst 4
+	base := time.Now()
+	l.clock = fixedClock(base)
+	l.lastTick = base
+
+	// Drain all tokens.
+	for i := 0; i < 4; i++ {
+		l.Allow()
+	}
+
+	// Advance by 500ms — should refill only 1 token (2 tokens/sec * 0.5s).
+	l.clock = fixedClock(base.Add(500 * time.Millisecond))
+
+	if !l.Allow() {
+		t.Fatal("expected Allow()=true after partial refill")
+	}
+	if l.Allow() {
+		t.Fatal("expected Allow()=false after partial refill exhausted")
+	}
+}
