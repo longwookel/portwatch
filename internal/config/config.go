@@ -74,5 +74,13 @@ func (c *Config) validate() error {
 	if c.Ports.RangeMin > c.Ports.RangeMax {
 		return ErrInvalidPortRange
 	}
+	if len(c.Ports.Protocols) == 0 {
+		return ErrNoProtocols
+	}
+	for _, proto := range c.Ports.Protocols {
+		if proto != "tcp" && proto != "udp" {
+			return ErrUnknownProtocol
+		}
+	}
 	return nil
 }
