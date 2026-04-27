@@ -66,3 +66,12 @@ func (s *Suppressor) Reset() {
 	defer s.mu.Unlock()
 	s.seen = make(map[string]time.Time)
 }
+
+// Len returns the number of keys currently tracked in the suppression window.
+// This is useful for monitoring and debugging purposes.
+func (s *Suppressor) Len() int {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.prune(s.now())
+	return len(s.seen)
+}
